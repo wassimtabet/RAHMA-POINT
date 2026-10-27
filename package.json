@@ -1,0 +1,20 @@
+{
+  "name": "rahmapoint",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "description": "RahmaPoint — site statique (GitHub Pages) + Firebase. Tests de sécurité.",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:rules",
+    "test:unit": "node --test tests/util.test.mjs tests/static.test.mjs",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-rahmapoint \"node --test tests/rules.test.mjs\"",
+    "test:browser": "node --test tests/browser.test.mjs",
+    "audit": "npm audit --omit=dev"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "firebase": "^10.13.0",
+    "firebase-tools": "^13.0.0",
+    "playwright-core": "^1.47.0"
+  }
+}

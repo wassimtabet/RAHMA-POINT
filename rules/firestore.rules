@@ -1,0 +1,206 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RahmaPoint — règles Cloud Firestore (v4, audit de sécurité)
+//
+// Modèle de données
+//   signalements/{id}                 signalement public (carte). userId = auteur.
+//   signalements/{id}/private/info    contact (lisible par un utilisateur connecté uniquement)
+//   signalements/{id}/comments/{cid}  commentaires (lisibles par un utilisateur connecté uniquement)
+//   rate/{uid}                        horodatages anti-spam (écrits avec chaque signalement/commentaire)
+//
+// Principes
+//   - refus par défaut ; seuls les comptes Google à e-mail vérifié peuvent écrire ;
+//   - champs, types et longueurs validés ici (le contrôle côté navigateur n'est PAS une protection) ;
+//   - dates imposées par le serveur (createdAt == request.time) ;
+//   - un utilisateur ne peut modifier/supprimer que SES signalements ; les compteurs ne peuvent
+//     qu'être incrémentés d'un pas, une fois par utilisateur, jamais par l'auteur lui-même ;
+//   - aucune suppression par un tiers (les signalements abusifs sont masqués côté client) ;
+//   - lecture massive limitée (limit obligatoire) ;
+//   - rôle admin = custom claim `admin: true` (posé via Admin SDK, jamais depuis le navigateur).
+//
+// Les constantes (longueurs, emprise géographique) doivent rester identiques à public/js/util.js.
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Fonctions communes ──────────────────────────────────────────────────
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function rateRef() {
+      return /databases/$(database)/documents/rate/$(request.auth.uid);
+    }
+
+    // Intervalle minimal entre deux signalements / deux commentaires d'un même utilisateur
+    function reportRateOk() {
+      return getAfter(rateRef()).data.lastReportAt == request.time
+        && (!exists(rateRef())
+            || !('lastReportAt' in get(rateRef()).data)
+            || get(rateRef()).data.lastReportAt <= request.time - duration.value(120, 's'));
+    }
+
+    function commentRateOk() {
+      return getAfter(rateRef()).data.lastCommentAt == request.time
+        && (!exists(rateRef())
+            || !('lastCommentAt' in get(rateRef()).data)
+            || get(rateRef()).data.lastCommentAt <= request.time - duration.value(10, 's'));
+    }
+
+    // ── Signalements ────────────────────────────────────────────────────────
+    function validNewSignal() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['type', 'description', 'location', 'lat', 'lng', 'createdAt',
+                               'expiresAt', 'resolved', 'reportCount', 'reportedBy', 'confirmedBy', 'userId'])
+        && d.keys().hasAll(['type', 'description', 'location', 'lat', 'lng', 'createdAt',
+                            'expiresAt', 'resolved', 'reportCount', 'reportedBy', 'confirmedBy', 'userId'])
+        && d.type in ['nourriture', 'medical', 'vetement', 'abri', 'autre']
+        && d.description is string && d.description.size() >= 10 && d.description.size() <= 500
+        && d.location is string && d.location.size() <= 100
+        && d.lat is number && d.lat >= 18.0 && d.lat <= 38.0
+        && d.lng is number && d.lng >= -9.0 && d.lng <= 12.5
+        && d.createdAt == request.time
+        && d.expiresAt is timestamp
+        && d.expiresAt > request.time
+        && d.expiresAt <= request.time + duration.value(6, 'd')
+        && d.resolved == false
+        && d.reportCount == 0
+        && d.reportedBy == []
+        && d.confirmedBy == []
+        && d.userId == request.auth.uid;
+    }
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function isOwnerOrAdmin() {
+      return resource.data.userId == request.auth.uid || isAdmin();
+    }
+
+    // Marquer « résolu » : tout utilisateur connecté. Rouvrir : auteur ou admin uniquement.
+    function resolveOk() {
+      return changedKeys().hasOnly(['resolved'])
+        && request.resource.data.resolved is bool
+        && (isOwnerOrAdmin()
+            || (resource.data.resolved == false && request.resource.data.resolved == true));
+    }
+
+    // Confirmation : +1 uid (le sien), une seule fois, pas pour l'auteur.
+    function confirmOk() {
+      return changedKeys().hasOnly(['confirmedBy'])
+        && resource.data.userId != request.auth.uid
+        && !(request.auth.uid in resource.data.confirmedBy)
+        && request.resource.data.confirmedBy == resource.data.confirmedBy.concat([request.auth.uid])
+        && request.resource.data.confirmedBy.size() <= 500;
+    }
+
+    // Signalement abusif : compteur +1 exactement, uid ajouté à reportedBy, une seule fois, pas pour l'auteur.
+    function reportOk() {
+      return changedKeys().hasOnly(['reportCount', 'reportedBy'])
+        && resource.data.userId != request.auth.uid
+        && !(request.auth.uid in resource.data.reportedBy)
+        && request.resource.data.reportedBy == resource.data.reportedBy.concat([request.auth.uid])
+        && request.resource.data.reportCount == resource.data.reportCount + 1
+        && request.resource.data.reportedBy.size() <= 500;
+    }
+
+    match /signalements/{id} {
+      allow get: if true;
+      // limit obligatoire : une requête sans limit, ou > 300, est refusée (anti lecture massive)
+      allow list: if request.query.limit <= 300;
+
+      allow create: if signedIn()
+        && id.matches('^[A-Za-z0-9]{20}$')
+        && validNewSignal()
+        && reportRateOk();
+
+      allow update: if signedIn() && (resolveOk() || confirmOk() || reportOk());
+
+      allow delete: if signedIn() && isOwnerOrAdmin();
+
+      // ── Contact (privé : utilisateurs connectés uniquement, jamais listable) ──
+      match /private/{docId} {
+        allow get: if signedIn();
+
+        allow create: if signedIn()
+          && docId == 'info'
+          && request.resource.data.keys().hasOnly(['contact', 'userId', 'expiresAt'])
+          && request.resource.data.keys().hasAll(['contact', 'userId', 'expiresAt'])
+          && request.resource.data.contact is string
+          && request.resource.data.contact.size() >= 1
+          && request.resource.data.contact.size() <= 50
+          && request.resource.data.userId == request.auth.uid
+          && getAfter(/databases/$(database)/documents/signalements/$(id)).data.userId == request.auth.uid
+          && request.resource.data.expiresAt == getAfter(/databases/$(database)/documents/signalements/$(id)).data.expiresAt;
+
+        allow update: if false;
+
+        allow delete: if signedIn()
+          && (get(/databases/$(database)/documents/signalements/$(id)).data.userId == request.auth.uid
+              || isAdmin());
+      }
+
+      // ── Commentaires (une écriture = un document : pas de réécriture de tableau) ──
+      match /comments/{cid} {
+        allow get: if signedIn();
+        allow list: if signedIn() && request.query.limit <= 100;
+
+        allow create: if signedIn()
+          && cid.matches('^[A-Za-z0-9]{20}$')
+          && request.resource.data.keys().hasOnly(['text', 'userId', 'createdAt', 'expiresAt'])
+          && request.resource.data.keys().hasAll(['text', 'userId', 'createdAt', 'expiresAt'])
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1
+          && request.resource.data.text.size() <= 300
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.expiresAt == get(/databases/$(database)/documents/signalements/$(id)).data.expiresAt
+          && commentRateOk();
+
+        allow update: if false;
+
+        allow delete: if signedIn()
+          && (resource.data.userId == request.auth.uid
+              || get(/databases/$(database)/documents/signalements/$(id)).data.userId == request.auth.uid
+              || isAdmin());
+      }
+    }
+
+    // ── Anti-spam : horodatages par utilisateur ─────────────────────────────
+    function rateFieldOk(f, gapSecs) {
+      let d = request.resource.data;
+      return !(f in d)
+        || (resource != null && (f in resource.data) && d[f] == resource.data[f])
+        || (d[f] == request.time
+            && (resource == null
+                || !(f in resource.data)
+                || resource.data[f] <= request.time - duration.value(gapSecs, 's')));
+    }
+
+    match /rate/{userId} {
+      allow get: if signedIn() && userId == request.auth.uid;
+
+      allow create, update: if signedIn()
+        && userId == request.auth.uid
+        && request.resource.data.keys().hasOnly(['lastReportAt', 'lastCommentAt'])
+        && rateFieldOk('lastReportAt', 120)
+        && rateFieldOk('lastCommentAt', 10);
+
+      allow delete: if false;
+    }
+
+    // ── Tout le reste est refusé ────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

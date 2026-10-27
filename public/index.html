@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" id="htmlRoot">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Sécurité (GitHub Pages ne permet pas de définir des en-têtes HTTP) : CSP et Referrer-Policy via <meta>.
+       Doit rester AVANT toute ressource. frame-ancestors / HSTS / nosniff / Permissions-Policy ne sont pas possibles en <meta> :
+       voir docs/MIGRATION_GITHUB_PAGES.md. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://*.tile.openstreetmap.fr https://server.arcgisonline.com https://*.tile.opentopomap.org https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://nominatim.openstreetmap.org https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://firebaseinstallations.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src https://rahma-point.firebaseapp.com https://accounts.google.com https://apis.google.com https://content.googleapis.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <script src="js/framebuster.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RahmaPoint — رحمة بوينت</title>
+  <meta name="description" content="RahmaPoint — Plateforme solidaire pour signaler les personnes en difficulté en Algérie." />
+
+  <!-- Favicon logo officiel -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,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" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-inner">
+
+      <!-- Logo officiel -->
+      <div class="logo">
+        <img src="logo.png" alt="RahmaPoint Logo" class="logo-img" />
+        <div class="logo-text">
+          <span class="logo-ar">رحمة بوينت</span>
+          <span class="logo-fr">RahmaPoint</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="lang-toggle" id="langToggle" data-action="toggleLang">العربية</button>
+        <div id="authZone" class="auth-zone">
+          <div class="auth-skeleton"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slogan bilingue -->
+    <div class="tagline">
+      <span class="tagline-ar">لا تكتفِ بالمشاهدة... اصنع البسمة</span>
+      <span class="tagline-sep">·</span>
+      <span class="tagline-fr">Relier le besoin à l'action, ensemble.</span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg-shapes" aria-hidden="true">
+      <span class="shape shape-1"></span>
+      <span class="shape shape-2"></span>
+      <span class="shape shape-3"></span>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span data-fr="🤝 Plateforme solidaire" data-ar="🤝 منصة تضامنية">🤝 Plateforme solidaire</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="hero-title-ar">رحمة بوينت</span>
+        <span class="hero-title-sub" data-fr="Ensemble, aidons ceux qui en ont besoin" data-ar="معاً، نساعد من يحتاج">Ensemble, aidons ceux qui en ont besoin</span>
+      </h1>
+      <p class="hero-desc" data-fr="Signalez les personnes en difficulté sur une carte interactive. Confirmez, partagez, agissez — chaque geste compte."
+                            data-ar="أبلغ عن الأشخاص المحتاجين على خريطة تفاعلية. أكّد، شارك، تصرف — كل بادرة مهمة.">
+        Signalez les personnes en difficulté sur une carte interactive.
+        Confirmez, partagez, agissez — chaque geste compte.
+      </p>
+      <div class="hero-cta">
+        <button class="cta-btn cta-primary" data-action="openSignalModal">
+          📍 <span data-fr="Signaler une situation" data-ar="الإبلاغ عن موقف">Signaler une situation</span>
+        </button>
+        <a class="cta-btn cta-secondary" href="#carte">
+          <span data-fr="Voir la carte" data-ar="عرض الخريطة">Voir la carte</span> <span class="cta-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       COMMENT AIDER ?
+  ══════════════════════════════════════════════ -->
+  <section class="how-section reveal">
+    <div class="section-container">
+      <div class="section-eyebrow" data-fr="Mode d'emploi" data-ar="طريقة الاستخدام">Mode d'emploi</div>
+      <h2 class="section-heading" data-fr="Comment aider ?" data-ar="كيف تساعد؟">Comment aider ?</h2>
+      <p class="section-sub" data-fr="Quatre étapes simples pour faire la différence autour de vous" data-ar="أربع خطوات بسيطة لتصنع فرقاً من حولك">Quatre étapes simples pour faire la différence autour de vous</p>
+      <div class="steps-grid">
+
+        <div class="step-card reveal-child" style="--i:0">
+          <div class="step-num">01</div>
+          <div class="step-icon">📍</div>
+          <h3 class="step-title" data-fr="Signaler une situation" data-ar="الإبلاغ عن موقف">Signaler une situation</h3>
+          <p class="step-desc" data-fr="Repérez une personne en difficulté ? Signalez-la en un clic directement sur la carte interactive."
+                                data-ar="لاحظت شخصاً محتاجاً؟ أبلغ عنه بنقرة واحدة مباشرة على الخريطة التفاعلية.">Repérez une personne en difficulté ? Signalez-la en un clic directement sur la carte interactive.</p>
+        </div>
+
+        <div class="step-card reveal-child" style="--i:1">
+          <div class="step-num">02</div>
+          <div class="step-icon">✅</div>
+          <h3 class="step-title" data-fr="Confirmer un signalement" data-ar="تأكيد بلاغ">Confirmer un signalement</h3>
+          <p class="step-desc" data-fr="Vous êtes témoin de la situation ? Confirmez-la pour renforcer sa crédibilité auprès des associations."
+                                data-ar="أنت شاهد على الموقف؟ أكّده لتعزيز مصداقيته لدى الجمعيات.">Vous êtes témoin de la situation ? Confirmez-la pour renforcer sa crédibilité auprès des associations.</p>
+        </div>
+
+        <div class="step-card reveal-child" style="--i:2">
+          <div class="step-num">03</div>
+          <div class="step-icon">🤝</div>
+          <h3 class="step-title" data-fr="Les associations interviennent" data-ar="الجمعيات تتدخل">Les associations interviennent</h3>
+          <p class="step-desc" data-fr="Les bénévoles et associations voient les signalements en temps réel et peuvent intervenir rapidement."
+                                data-ar="يرى المتطوعون والجمعيات البلاغات مباشرة ويمكنهم التدخل بسرعة.">Les bénévoles et associations voient les signalements en temps réel et peuvent intervenir rapidement.</p>
+        </div>
+
+        <div class="step-card reveal-child" style="--i:3">
+          <div class="step-num">04</div>
+          <div class="step-icon">❤️</div>
+          <h3 class="step-title" data-fr="Ensemble, nous faisons la différence" data-ar="معاً نصنع الفرق">Ensemble, nous faisons la différence</h3>
+          <p class="step-desc" data-fr="Chaque confirmation, chaque signalement est un acte de solidarité qui peut changer une vie."
+                                data-ar="كل تأكيد، كل بلاغ هو عمل تضامني قد يغيّر حياة إنسان.">Chaque confirmation, chaque signalement est un acte de solidarité qui peut changer une vie.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       CARTE — cœur de RahmaPoint, juste après le Hero
+  ══════════════════════════════════════════════ -->
+  <section class="map-section" id="carte">
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-action="setFilter" data-filter="all">
+        <span data-fr="Tout" data-ar="الكل">Tout</span>
+      </button>
+      <button class="filter-btn" data-action="setFilter" data-filter="nourriture">
+        🍞 <span data-fr="Nourriture" data-ar="طعام">Nourriture</span>
+      </button>
+      <button class="filter-btn" data-action="setFilter" data-filter="medical">
+        🏥 <span data-fr="Médical" data-ar="طبي">Médical</span>
+      </button>
+      <button class="filter-btn" data-action="setFilter" data-filter="vetement">
+        👕 <span data-fr="Vêtement" data-ar="ملابس">Vêtement</span>
+      </button>
+      <button class="filter-btn" data-action="setFilter" data-filter="abri">
+        🏠 <span data-fr="Abri" data-ar="مأوى">Abri</span>
+      </button>
+      <button class="filter-btn" data-action="setFilter" data-filter="autre">
+        💬 <span data-fr="Autre" data-ar="أخرى">Autre</span>
+      </button>
+    </div>
+
+    <div class="map-wrapper" id="mapWrapper">
+      <div id="map"></div>
+
+      <div class="map-search-wrapper" id="mapSearchWrapper">
+        <div class="map-search-inner">
+          <span class="map-search-icon">🔍</span>
+          <input type="text" id="mapSearchInput"
+            data-fr-ph="Ville, adresse, quartier…" data-ar-ph="مدينة، عنوان، حي…"
+            placeholder="Ville, adresse, quartier…"
+            autocomplete="off" spellcheck="false" maxlength="100" />
+          <button id="mapSearchClear" title="Effacer">✕</button>
+        </div>
+        <div class="map-search-results" id="mapSearchResults"></div>
+      </div>
+
+      <div class="map-quick-actions">
+        <button class="map-action-btn" id="mapLocateBtn" data-action="locateOnMap"
+          data-fr-title="Ma position" data-ar-title="موقعي" title="Ma position">📍</button>
+        <button class="map-action-btn" id="mapRefreshBtn" data-action="refreshMap"
+          data-fr-title="Actualiser" data-ar-title="تحديث" title="Actualiser">🔄</button>
+        <button class="map-action-btn" id="mapFullscreenBtn" data-action="toggleMapFullscreen"
+          data-fr-title="Plein écran" data-ar-title="ملء الشاشة" title="Plein écran">⛶</button>
+      </div>
+
+      <div class="map-style-switcher">
+        <button class="style-btn active" data-action="switchMapStyle" data-style="osm"      title="OpenStreetMap">🌍</button>
+        <button class="style-btn"        data-action="switchMapStyle" data-style="hot"      title="Humanitarian (HOT)">🗺</button>
+        <button class="style-btn"        data-action="switchMapStyle" data-style="satellite" title="Satellite">🛰</button>
+        <button class="style-btn"        data-action="switchMapStyle" data-style="dark"      title="Dark">🌙</button>
+        <button class="style-btn"        data-action="switchMapStyle" data-style="topo"      title="Topo">⛰</button>
+      </div>
+
+      <div class="map-click-hint" id="mapHint">
+        <span data-fr="💡 Cliquez sur la carte pour signaler une situation"
+              data-ar="💡 انقر على الخريطة للإبلاغ عن موقف">
+          💡 Cliquez sur la carte pour signaler une situation
+        </span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         STATS BAR — juste sous la carte
+    ══════════════════════════════════════════════ -->
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num" id="totalCount">0</span>
+        <span class="stat-label" data-fr="Situations" data-ar="مواقف">Situations</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <span class="stat-num" id="resolvedCount">0</span>
+        <span class="stat-label" data-fr="Résolues" data-ar="محلولة">Résolues</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <span class="stat-num" id="activeCount">0</span>
+        <span class="stat-label" data-fr="En attente" data-ar="بانتظار">En attente</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SITUATIONS LIST
+  ══════════════════════════════════════════════ -->
+  <section class="situations-section">
+    <h2 class="section-title" data-fr="Situations récentes" data-ar="المواقف الأخيرة">Situations récentes</h2>
+    <div class="cards-grid" id="cardsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="empty-icon">🕊️</div>
+      <p data-fr="Aucune situation pour le moment." data-ar="لا توجد مواقف حالياً.">Aucune situation pour le moment.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       À PROPOS
+  ══════════════════════════════════════════════ -->
+  <section class="about-section reveal">
+    <div class="section-container">
+      <div class="about-grid">
+
+        <div class="about-content">
+          <div class="section-eyebrow" data-fr="Notre histoire" data-ar="قصتنا">Notre histoire</div>
+          <h2 class="section-heading" data-fr="À propos de RahmaPoint" data-ar="عن رحمة بوينت">À propos de RahmaPoint</h2>
+          <p class="about-text" data-fr="RahmaPoint est une plateforme solidaire permettant aux citoyens de signaler les personnes en difficulté sur une carte interactive."
+                                 data-ar="رحمة بوينت منصة تضامنية تتيح للمواطنين الإبلاغ عن الأشخاص المحتاجين على خريطة تفاعلية.">
+            RahmaPoint est une plateforme solidaire permettant aux citoyens de signaler
+            les personnes en difficulté sur une carte interactive.
+          </p>
+          <p class="about-text" data-fr="Notre objectif est de faciliter la coordination entre les citoyens, les bénévoles et les associations afin que l'aide arrive rapidement aux personnes qui en ont besoin."
+                                 data-ar="هدفنا هو تسهيل التنسيق بين المواطنين والمتطوعين والجمعيات حتى تصل المساعدة بسرعة لمن يحتاجها.">
+            Notre objectif est de faciliter la coordination entre les citoyens, les bénévoles
+            et les associations afin que l'aide arrive rapidement aux personnes qui en ont besoin.
+          </p>
+          <div class="about-notice">
+            <span class="notice-icon">🛡️</span>
+            <div>
+              <strong data-fr="RahmaPoint ne collecte jamais d'argent." data-ar="رحمة بوينت لا تجمع الأموال أبداً.">RahmaPoint ne collecte jamais d'argent.</strong>
+              <span data-fr=" La plateforme sert uniquement à signaler les situations, confirmer leur existence et permettre aux associations d'intervenir."
+                    data-ar=" المنصة تُستخدم فقط للإبلاغ عن المواقف، وتأكيد وجودها، والسماح للجمعيات بالتدخل."> La plateforme sert uniquement à signaler les situations, confirmer leur existence et permettre aux associations d'intervenir.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-visual">
+          <div class="about-illustration">
+            <div class="illu-bg-circle"></div>
+            <img src="logo.png" alt="RahmaPoint" class="illu-logo-center" />
+            <div class="illu-card illu-c1 reveal-child" style="--i:0"><span class="illu-icon">🍞</span><span>Nourriture</span></div>
+            <div class="illu-card illu-c2 reveal-child" style="--i:1"><span class="illu-icon">🏥</span><span>Médical</span></div>
+            <div class="illu-card illu-c3 reveal-child" style="--i:2"><span class="illu-icon">🏠</span><span>Abri</span></div>
+            <div class="illu-card illu-c4 reveal-child" style="--i:3"><span class="illu-icon">👕</span><span>Vêtement</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       NOTRE MISSION
+  ══════════════════════════════════════════════ -->
+  <section class="mission-section reveal">
+    <div class="section-container">
+      <div class="mission-inner">
+        <div class="mission-logo-wrap">
+          <img src="logo.png" alt="RahmaPoint" class="mission-logo" />
+        </div>
+        <div class="section-eyebrow light" data-fr="Notre engagement" data-ar="التزامنا">Notre engagement</div>
+        <h2 class="mission-title" data-fr="Notre mission" data-ar="مهمتنا">Notre mission</h2>
+        <p class="mission-text" data-fr="Construire un réseau solidaire reliant les citoyens, les bénévoles et les associations afin que chaque personne en difficulté puisse être repérée et aidée le plus rapidement possible."
+                                 data-ar="بناء شبكة تضامنية تربط المواطنين والمتطوعين والجمعيات حتى يتم رصد كل شخص محتاج ومساعدته في أسرع وقت ممكن.">
+          Construire un réseau solidaire reliant les citoyens, les bénévoles et les associations
+          afin que chaque personne en difficulté puisse être repérée et aidée
+          le plus rapidement possible.
+        </p>
+        <p class="mission-ar">لا تكتفِ بالمشاهدة... اصنع البسمة</p>
+        <button class="cta-btn cta-light" data-action="openSignalModal">
+          <span data-fr="Rejoindre le réseau" data-ar="انضم إلى الشبكة">Rejoindre le réseau</span> <span class="cta-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       POURQUOI RAHMAPOINT ?
+  ══════════════════════════════════════════════ -->
+  <section class="why-section reveal">
+    <div class="section-container">
+      <div class="section-eyebrow" data-fr="Nos engagements" data-ar="التزاماتنا">Nos engagements</div>
+      <h2 class="section-heading" data-fr="Pourquoi RahmaPoint ?" data-ar="لماذا رحمة بوينت؟">Pourquoi RahmaPoint ?</h2>
+      <p class="section-sub" data-fr="Une plateforme conçue avec soin pour servir la communauté" data-ar="منصة صُممت بعناية لخدمة المجتمع">Une plateforme conçue avec soin pour servir la communauté</p>
+      <div class="why-grid">
+
+        <div class="why-card reveal-child" style="--i:0">
+          <div class="why-icon">🆓</div>
+          <h3 data-fr="Gratuit" data-ar="مجاني">Gratuit</h3>
+          <p data-fr="Totalement gratuit, pour toujours. Aucun abonnement, aucun frais caché." data-ar="مجاني بالكامل، إلى الأبد. بدون اشتراك أو رسوم خفية.">Totalement gratuit, pour toujours. Aucun abonnement, aucun frais caché.</p>
+        </div>
+        <div class="why-card reveal-child" style="--i:1">
+          <div class="why-icon">⚡</div>
+          <h3 data-fr="Rapide" data-ar="سريع">Rapide</h3>
+          <p data-fr="Signalement en quelques secondes. L'aide ne doit pas attendre." data-ar="الإبلاغ في ثوانٍ معدودة. المساعدة لا تنتظر.">Signalement en quelques secondes. L'aide ne doit pas attendre.</p>
+        </div>
+        <div class="why-card reveal-child" style="--i:2">
+          <div class="why-icon">🔒</div>
+          <h3 data-fr="Sécurisé" data-ar="آمن">Sécurisé</h3>
+          <p data-fr="Authentification Google, règles Firestore strictes, données protégées." data-ar="تسجيل دخول عبر Google، قواعد Firestore صارمة، بيانات محمية.">Authentification Google, règles Firestore strictes, données protégées.</p>
+        </div>
+        <div class="why-card reveal-child" style="--i:3">
+          <div class="why-icon">🤝</div>
+          <h3 data-fr="Collaboratif" data-ar="تعاوني">Collaboratif</h3>
+          <p data-fr="Citoyens, bénévoles et associations travaillent ensemble sur la même carte." data-ar="مواطنون، متطوعون وجمعيات يعملون معاً على نفس الخريطة.">Citoyens, bénévoles et associations travaillent ensemble sur la même carte.</p>
+        </div>
+        <div class="why-card reveal-child" style="--i:4">
+          <div class="why-icon">📱</div>
+          <h3 data-fr="Accessible partout" data-ar="متاح في كل مكان">Accessible partout</h3>
+          <p data-fr="Fonctionne sur mobile, tablette et ordinateur. En ligne, partout en Algérie." data-ar="يعمل على الهاتف واللوحي والحاسوب. متاح عبر الإنترنت في كل الجزائر.">Fonctionne sur mobile, tablette et ordinateur. En ligne, partout en Algérie.</p>
+        </div>
+        <div class="why-card reveal-child" style="--i:5">
+          <div class="why-icon">💚</div>
+          <h3 data-fr="Aucune collecte d'argent" data-ar="بدون جمع أموال">Aucune collecte d'argent</h3>
+          <p data-fr="RahmaPoint ne collecte jamais d'argent. Nous facilitons l'aide, pas les transactions." data-ar="رحمة بوينت لا تجمع الأموال أبداً. نحن نسهّل المساعدة وليس المعاملات المالية.">RahmaPoint ne collecte jamais d'argent. Nous facilitons l'aide, pas les transactions.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo.png" alt="RahmaPoint" class="footer-logo-img" />
+        <div>
+          <div class="footer-name">RahmaPoint · رحمة بوينت</div>
+          <div class="footer-slogan">لا تكتفِ بالمشاهدة... اصنع البسمة</div>
+        </div>
+      </div>
+      <p class="footer-copy" data-fr="Plateforme de solidarité communautaire — connexion Google requise pour publier"
+                              data-ar="منصة تضامن مجتمعي — يتطلب النشر تسجيل الدخول عبر Google">Plateforme de solidarité communautaire — connexion Google requise pour publier</p>
+      <p class="footer-copy">© 2026 RahmaPoint — <span data-fr="Algérie" data-ar="الجزائر">Algérie</span> 🇩🇿</p>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════
+       MODALS
+  ══════════════════════════════════════════════ -->
+
+  <!-- MODAL: SIGNALER -->
+  <div class="modal-overlay" id="signalModal" data-overlay="signalModal">
+    <div class="modal">
+      <button class="modal-close" data-action="closeSignalModal">✕</button>
+      <h2 class="modal-title"><span data-fr="Signaler une situation" data-ar="الإبلاغ عن موقف">Signaler une situation</span></h2>
+      <div class="form-group">
+        <label data-fr="Type de besoin" data-ar="نوع الحاجة">Type de besoin</label>
+        <div class="type-grid">
+          <button class="type-btn" data-type="nourriture" data-action="selectType">🍞 <span data-fr="Nourriture" data-ar="طعام">Nourriture</span></button>
+          <button class="type-btn" data-type="medical"    data-action="selectType">🏥 <span data-fr="Médical"    data-ar="طبي">Médical</span></button>
+          <button class="type-btn" data-type="vetement"   data-action="selectType">👕 <span data-fr="Vêtement"   data-ar="ملابس">Vêtement</span></button>
+          <button class="type-btn" data-type="abri"       data-action="selectType">🏠 <span data-fr="Abri"       data-ar="مأوى">Abri</span></button>
+          <button class="type-btn" data-type="autre"      data-action="selectType">💬 <span data-fr="Autre"      data-ar="أخرى">Autre</span></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-fr="Description" data-ar="الوصف">Description</label>
+        <textarea id="descInput" rows="3" placeholder="Décrivez la situation..."
+          data-fr-ph="Décrivez la situation..." data-ar-ph="صف الموقف..."></textarea>
+      </div>
+      <div class="form-group">
+        <label data-fr="Localisation" data-ar="الموقع">Localisation</label>
+        <div class="location-row">
+          <input type="text" id="locationInput" placeholder="Ex: Rue Didouche Mourad, Sétif" readonly
+            data-fr-ph="Ex: Rue Didouche Mourad, Sétif" data-ar-ph="مثال: شارع ديدوش مراد، سطيف" />
+          <button class="btn-locate" data-action="getLocation">📍</button>
+        </div>
+        <small data-fr="Cliquez sur 📍 pour utiliser votre position actuelle" data-ar="اضغط 📍 لاستخدام موقعك الحالي">Cliquez sur 📍 pour utiliser votre position actuelle</small>
+      </div>
+      <div class="form-group">
+        <label data-fr="Contact (optionnel)" data-ar="التواصل (اختياري)">Contact (optionnel)</label>
+        <input type="text" id="contactInput" placeholder="Téléphone, WhatsApp..."
+          data-fr-ph="Téléphone, WhatsApp..." data-ar-ph="هاتف، واتساب..." />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="closeSignalModal"><span data-fr="Annuler" data-ar="إلغاء">Annuler</span></button>
+        <button class="btn-primary"   data-action="submitSignal"><span data-fr="Publier" data-ar="نشر">Publier</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETAIL -->
+  <div class="modal-overlay" id="detailModal" data-overlay="detailModal">
+    <div class="modal modal-detail">
+      <button class="modal-close" data-action="closeModal" data-target="detailModal">✕</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONNEXION REQUISE -->
+  <div class="modal-overlay" id="loginRequiredModal" data-overlay="loginRequiredModal">
+    <div class="modal modal-login-required">
+      <button class="modal-close" data-action="closeModal" data-target="loginRequiredModal">✕</button>
+      <div class="login-required-body">
+        <div class="login-required-icon">🔐</div>
+        <h2 class="modal-title"><span data-fr="Connexion requise" data-ar="تسجيل الدخول مطلوب">Connexion requise</span></h2>
+        <p class="login-required-msg">
+          <span data-fr="Pour publier un signalement sur RahmaPoint, vous devez être connecté avec votre compte Google."
+                data-ar="لنشر بلاغ على RahmaPoint، يجب عليك تسجيل الدخول بحسابك على Google.">
+            Pour publier un signalement sur RahmaPoint, vous devez être connecté avec votre compte Google.
+          </span>
+        </p>
+        <button class="btn-google-login btn-google-login--large"
+                data-action="loginFromModal">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span data-fr="Continuer avec Google" data-ar="تسجيل الدخول بـ Google">Continuer avec Google</span>
+        </button>
+        <p class="login-required-note">
+          <span data-fr="La connexion est gratuite et sécurisée via Google."
+                data-ar="تسجيل الدخول مجاني وآمن عبر Google.">La connexion est gratuite et sécurisée via Google.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL: POLITIQUE DE CONFIDENTIALITÉ -->
+  <div class="modal-overlay active" id="privacyModal">
+    <div class="modal modal-privacy">
+      <div class="privacy-header">
+        <div class="privacy-logo">
+          <img src="logo.png" alt="RahmaPoint" style="height:36px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9" />
+        </div>
+        <h2 class="privacy-title" data-fr="Politique de confidentialité" data-ar="سياسة الخصوصية">Politique de confidentialité</h2>
+        <p class="privacy-subtitle" data-fr="Veuillez lire et accepter avant de continuer" data-ar="يرجى القراءة والموافقة قبل المتابعة">Veuillez lire et accepter avant de continuer</p>
+      </div>
+      <div class="privacy-body">
+        <div class="privacy-article"><div class="art-num">1</div><div><div class="art-title" data-fr="Introduction" data-ar="مقدمة">Introduction</div><div class="art-text" data-fr="Nous accordons une importance primordiale au respect de la vie privée des utilisateurs. En utilisant ce site, vous acceptez la présente politique de confidentialité." data-ar="نحن في RahmaPoint نولي أهمية قصوى لاحترام خصوصية المستخدمين وحماية بياناتهم الشخصية. باستخدامك للموقع، فإنك توافق على سياسة الخصوصية هذه.">Nous accordons une importance primordiale au respect de la vie privée des utilisateurs. En utilisant ce site, vous acceptez la présente politique de confidentialité.</div></div></div>
+        <div class="privacy-article"><div class="art-num">2</div><div><div class="art-title" data-fr="Nature du service" data-ar="طبيعة الخدمة">Nature du service</div><div class="art-text" data-fr="RahmaPoint est une plateforme caritative visant à faciliter l'aide aux personnes dans le besoin en Algérie." data-ar="RahmaPoint منصة خيرية تهدف إلى تسهيل إيصال المساعدة للأشخاص المحتاجين داخل الجزائر.">RahmaPoint est une plateforme caritative visant à faciliter l'aide aux personnes dans le besoin en Algérie.</div></div></div>
+        <div class="privacy-article"><div class="art-num">3</div><div><div class="art-title" data-fr="Données collectées" data-ar="البيانات التي نجمعها">Données collectées</div><div class="art-text" data-fr="• Localisation géographique approximative • Description de la situation (optionnel) • Photo (optionnel)" data-ar="• الموقع الجغرافي التقريبي • وصف الحالة (اختياري) • صورة (إن وجدت – اختياري)">• Localisation géographique approximative<br>• Description de la situation (optionnel)<br>• Photo (optionnel)</div></div></div>
+        <div class="privacy-article"><div class="art-num">4</div><div><div class="art-title" data-fr="Utilisation des données" data-ar="كيفية استخدام البيانات">Utilisation des données</div><div class="art-text" data-fr="Nous utilisons les données pour faciliter l'aide, prévenir les faux signalements et améliorer le service." data-ar="نستخدم البيانات لتسهيل تقديم المساعدة ومنع البلاغات الكاذبة وتحسين الخدمة.">Nous utilisons les données pour faciliter l'aide, prévenir les faux signalements et améliorer le service.</div></div></div>
+        <div class="privacy-article"><div class="art-num">5</div><div><div class="art-title" data-fr="Partage des données" data-ar="مشاركة البيانات">Partage des données</div><div class="art-text" data-fr="Nous ne vendons ni ne louons aucune donnée personnelle à des tiers." data-ar="لا نقوم ببيع أو تأجير أي بيانات شخصية لأي طرف ثالث.">Nous ne vendons ni ne louons aucune donnée personnelle à des tiers.</div></div></div>
+        <div class="privacy-article"><div class="art-num">6</div><div><div class="art-title" data-fr="Protection des personnes dans le besoin" data-ar="حماية خصوصية الأشخاص المحتاجين">Protection des personnes dans le besoin</div><div class="art-text" data-fr="• La localisation exacte n'est pas affichée publiquement • La diffamation ou l'exploitation sont strictement interdites" data-ar="• لا يتم عرض الموقع الدقيق للعامة • يُمنع التشهير أو الاستغلال">• La localisation exacte n'est pas affichée publiquement<br>• La diffamation ou l'exploitation sont strictement interdites</div></div></div>
+        <div class="privacy-article"><div class="art-num">7</div><div><div class="art-title" data-fr="Sécurité des données" data-ar="أمن البيانات">Sécurité des données</div><div class="art-text" data-fr="Nous appliquons des mesures raisonnables de protection, sachant qu'aucune sécurité absolue n'existe sur Internet." data-ar="نلتزم بإجراءات معقولة لحماية البيانات، مع العلم أنه لا يوجد أمان مطلق على الإنترنت.">Nous appliquons des mesures raisonnables de protection, sachant qu'aucune sécurité absolue n'existe sur Internet.</div></div></div>
+        <div class="privacy-article"><div class="art-num">8</div><div><div class="art-title" data-fr="Durée de conservation" data-ar="مدة الاحتفاظ بالبيانات">Durée de conservation</div><div class="art-text" data-fr="Les signalements sont conservés uniquement pour la durée nécessaire à la finalité humanitaire." data-ar="يتم الاحتفاظ بالبلاغات فقط للمدة اللازمة للغرض الإنساني.">Les signalements sont conservés uniquement pour la durée nécessaire à la finalité humanitaire.</div></div></div>
+        <div class="privacy-article"><div class="art-num">9</div><div><div class="art-title" data-fr="Responsabilité de l'utilisateur" data-ar="مسؤولية المستخدم">Responsabilité de l'utilisateur</div><div class="art-text" data-fr="L'utilisateur s'engage à ne pas abuser de la plateforme ni à publier des informations trompeuses." data-ar="يتعهد المستخدم بعدم إساءة استخدام المنصة أو نشر معلومات مضللة.">L'utilisateur s'engage à ne pas abuser de la plateforme ni à publier des informations trompeuses.</div></div></div>
+        <div class="privacy-article"><div class="art-num">10</div><div><div class="art-title" data-fr="Clause de non-responsabilité" data-ar="إخلاء المسؤولية">Clause de non-responsabilité</div><div class="art-text" data-fr="RahmaPoint est une plateforme de coordination, pas un service médical ou sécuritaire." data-ar="RahmaPoint منصة تنسيقية وليست جهة طبية أو أمنية.">RahmaPoint est une plateforme de coordination, pas un service médical ou sécuritaire.</div></div></div>
+        <div class="privacy-article"><div class="art-num">11</div><div><div class="art-title" data-fr="Droits de l'utilisateur" data-ar="حقوق المستخدم">Droits de l'utilisateur</div><div class="art-text" data-fr="Vous avez le droit de demander la suppression de votre signalement ou de signaler un contenu abusif." data-ar="يحق للمستخدم طلب حذف بلاغه أو الإبلاغ عن محتوى مخالف.">Vous avez le droit de demander la suppression de votre signalement ou de signaler un contenu abusif.</div></div></div>
+        <div class="privacy-article"><div class="art-num">12</div><div><div class="art-title" data-fr="Modifications" data-ar="التعديلات">Modifications</div><div class="art-text" data-fr="Nous pouvons mettre à jour cette politique si nécessaire." data-ar="قد نقوم بتحديث سياسة الخصوصية عند الحاجة.">Nous pouvons mettre à jour cette politique si nécessaire.</div></div></div>
+      </div>
+      <div class="privacy-footer">
+        <label class="checkbox-label" id="acceptLabel">
+          <input type="checkbox" id="acceptCheck" />
+          <span class="checkmark"></span>
+          <span data-fr="J'ai lu et j'accepte la politique de confidentialité de RahmaPoint" data-ar="لقد قرأت وأوافق على سياسة الخصوصية الخاصة بـ RahmaPoint">J'ai lu et j'accepte la politique de confidentialité de RahmaPoint</span>
+        </label>
+        <button class="btn-accept" id="acceptBtn" disabled data-action="acceptPrivacy">
+          <span data-fr="Continuer →" data-ar="متابعة ←">Continuer →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS (tous auto-hébergés ou Google/Firebase ; aucun script inline : CSP sans 'unsafe-inline') -->
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/reveal.js"></script>
+
+</body>
+</html>

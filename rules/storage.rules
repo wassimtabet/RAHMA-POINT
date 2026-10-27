@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// RahmaPoint n'utilise PAS Firebase Storage (aucun téléversement dans le code).
+// Refus total par défaut : si Storage est activé dans la console, aucun fichier ne peut être lu ni écrit.
+// (La politique de confidentialité mentionne « Photo (optionnel) » : la fonctionnalité n'existe pas.
+//  Si elle est ajoutée un jour, écrire des règles dédiées : auteur connecté, taille < 2 Mo, image/*.)
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
